@@ -195,6 +195,21 @@ button:focus-visible {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 250ms ease;
+}
+
+.gallery-item-button:hover img {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item img {
+    transition: none;
+  }
+
+  .gallery-item-button:hover img {
+    transform: none;
+  }
 }
 
 .media-link {
