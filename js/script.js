@@ -21,8 +21,20 @@ const spaceFacts = [
 	'Olympus Mons on Mars is about 22 kilometers tall, nearly two and a half times Mount Everest.'
 ];
 
-// Pick a different space fact at random whenever the page loads.
-spaceFact.textContent = spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
+let currentSpaceFactIndex = Math.floor(Math.random() * spaceFacts.length);
+spaceFact.textContent = spaceFacts[currentSpaceFactIndex];
+
+function showNewSpaceFact() {
+	if (spaceFacts.length > 1) {
+		let nextIndex = Math.floor(Math.random() * (spaceFacts.length - 1));
+		if (nextIndex >= currentSpaceFactIndex) {
+			nextIndex += 1;
+		}
+		currentSpaceFactIndex = nextIndex;
+	}
+
+	spaceFact.textContent = spaceFacts[currentSpaceFactIndex];
+}
 
 // Call the setupDateInputs function from dateRange.js
 // This sets up the date pickers to:
@@ -132,6 +144,7 @@ async function loadApodImages() {
 	const startDate = startInput.value;
 	const endDate = endInput.value;
 
+	showNewSpaceFact();
 	loadButton.disabled = true;
 	loadButton.textContent = 'Loading...';
 	showMessage('Your space images are on the way...');
