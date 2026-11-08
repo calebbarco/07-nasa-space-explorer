@@ -60,42 +60,55 @@ function openApodModal(apod) {
 function createApodCard(apod) {
 	const card = document.createElement('article');
 	card.className = 'gallery-item';
+	const hasImage = apod.media_type === 'image' && apod.hdurl;
 
-	if (apod.media_type === 'image' && (apod.hdurl || apod.url)) {
-		card.tabIndex = 0;
-		card.setAttribute('role', 'button');
-		card.setAttribute('aria-label', `View details for ${apod.title}`);
-		card.addEventListener('click', () => openApodModal(apod));
-		card.addEventListener('keydown', event => {
-			if (event.key === 'Enter' || event.key === ' ') {
-				event.preventDefault();
-				openApodModal(apod);
-			}
-		});
-
+	if (hasImage) {
+		const detailsButton = document.createElement('button');
+		detailsButton.className = 'gallery-item-button';
+		detailsButton.type = 'button';
+		detailsButton.setAttribute('aria-label', `View details for ${apod.title}`);
+		detailsButton.addEventListener('click', () => openApodModal(apod));
 		const image = document.createElement('img');
-		image.src = apod.hdurl || apod.url;
+		image.src = apod.hdurl;
 		image.alt = apod.alt || apod.title;
 		image.loading = 'lazy';
-		card.append(image);
-	} else {
+		detailsButton.append(image);
+
+		const title = document.createElement('h2');
+		title.textContent = apod.title;
+		detailsButton.append(title);
+
+		const date = document.createElement('p');
+		date.textContent = apod.date;
+		detailsButton.append(date);
+		card.append(detailsButton);
+	}
+
+	if (!hasImage) {
+		const title = document.createElement('h2');
+		title.textContent = apod.title;
+		card.append(title);
+
+		const date = document.createElement('p');
+		date.textContent = apod.date;
+		card.append(date);
+	}
+
+	if (apod.url) {
 		const mediaLink = document.createElement('a');
+		mediaLink.className = 'media-link';
 		mediaLink.href = apod.url;
 		mediaLink.target = '_blank';
 		mediaLink.rel = 'noopener noreferrer';
-		mediaLink.textContent = apod.media_type === 'video' ? 'Watch APOD video' : 'View APOD media';
+		mediaLink.textContent = apod.media_type === 'video'
+			? "Watch this video on NASA's APOD page"
+			: hasImage
+				? "View this image on NASA's APOD page"
+				: "View this media on NASA's APOD page";
 		card.append(mediaLink);
 	}
 
-	const title = document.createElement('h2');
-	title.textContent = apod.title;
-	card.append(title);
-
-	const date = document.createElement('p');
-	date.textContent = apod.date;
-	card.append(date);
-
-	if (apod.media_type !== 'image' || (!apod.hdurl && !apod.url)) {
+	if (!hasImage) {
 		const description = document.createElement('p');
 		description.textContent = getExplanation(apod);
 		card.append(description);

@@ -133,16 +133,25 @@ button:focus-visible {
   flex-direction: column;
 }
 
-.gallery-item[role="button"] {
+.gallery-item-button {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
 }
 
-.gallery-item[role="button"]:focus-visible {
+.gallery-item-button:focus-visible {
   outline: 3px solid var(--color-primary);
   outline-offset: 3px;
 }
 
-.gallery-item[role="button"]:hover {
+.gallery-item-button:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -158,6 +167,27 @@ button:focus-visible {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+}
+
+.media-link {
+  align-self: flex-start;
+  margin: 10px 5px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.media-link:hover {
+  background-color: var(--color-primary-darker);
+  text-decoration: underline;
+}
+
+.media-link:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .gallery-item p {
