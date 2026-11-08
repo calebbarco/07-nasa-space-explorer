@@ -110,7 +110,7 @@ async function loadApodImages() {
 
 	loadButton.disabled = true;
 	loadButton.textContent = 'Loading...';
-	showMessage('Loading NASA Astronomy Pictures of the Day...');
+	showMessage('Your space images are on the way...');
 
 	try {
 		// The endpoint is paginated newest-first, so find which pages contain these dates.
