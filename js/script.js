@@ -3,6 +3,12 @@ const startInput = document.getElementById('startDate');
 const endInput = document.getElementById('endDate');
 const loadButton = document.querySelector('button');
 const gallery = document.getElementById('gallery');
+const apodModal = document.getElementById('apodModal');
+const modalImage = apodModal.querySelector('.modal-image');
+const modalTitle = apodModal.querySelector('#modalTitle');
+const modalDate = apodModal.querySelector('.modal-date');
+const modalExplanation = apodModal.querySelector('.modal-explanation');
+const modalCloseButton = apodModal.querySelector('.modal-close');
 
 const apodEndpoint = 'https://science.nasa.gov/wp-json/wp/v2/apod-basic';
 const apodsPerPage = 25;
@@ -36,13 +42,39 @@ function showMessage(message) {
 	gallery.replaceChildren(messageElement);
 }
 
+function getExplanation(apod) {
+	return new DOMParser()
+		.parseFromString(apod.explanation || '', 'text/html')
+		.body.textContent.trim();
+}
+
+function openApodModal(apod) {
+	modalImage.src = apod.hdurl || apod.url;
+	modalImage.alt = apod.alt || apod.title;
+	modalTitle.textContent = apod.title;
+	modalDate.textContent = apod.date;
+	modalExplanation.textContent = getExplanation(apod);
+	apodModal.showModal();
+}
+
 function createApodCard(apod) {
 	const card = document.createElement('article');
 	card.className = 'gallery-item';
 
-	if (apod.media_type === 'image' && apod.hdurl) {
+	if (apod.media_type === 'image' && (apod.hdurl || apod.url)) {
+		card.tabIndex = 0;
+		card.setAttribute('role', 'button');
+		card.setAttribute('aria-label', `View details for ${apod.title}`);
+		card.addEventListener('click', () => openApodModal(apod));
+		card.addEventListener('keydown', event => {
+			if (event.key === 'Enter' || event.key === ' ') {
+				event.preventDefault();
+				openApodModal(apod);
+			}
+		});
+
 		const image = document.createElement('img');
-		image.src = apod.hdurl;
+		image.src = apod.hdurl || apod.url;
 		image.alt = apod.alt || apod.title;
 		image.loading = 'lazy';
 		card.append(image);
@@ -63,11 +95,11 @@ function createApodCard(apod) {
 	date.textContent = apod.date;
 	card.append(date);
 
-	const description = document.createElement('p');
-	description.textContent = new DOMParser()
-		.parseFromString(apod.explanation || '', 'text/html')
-		.body.textContent.trim();
-	card.append(description);
+	if (apod.media_type !== 'image' || (!apod.hdurl && !apod.url)) {
+		const description = document.createElement('p');
+		description.textContent = getExplanation(apod);
+		card.append(description);
+	}
 
 	return card;
 }
@@ -118,3 +150,9 @@ async function loadApodImages() {
 }
 
 loadButton.addEventListener('click', loadApodImages);
+modalCloseButton.addEventListener('click', () => apodModal.close());
+apodModal.addEventListener('click', event => {
+	if (event.target === apodModal) {
+		apodModal.close();
+	}
+});
