@@ -3,6 +3,7 @@ const startInput = document.getElementById('startDate');
 const endInput = document.getElementById('endDate');
 const loadButton = document.querySelector('button');
 const gallery = document.getElementById('gallery');
+const spaceFact = document.getElementById('spaceFact');
 const apodModal = document.getElementById('apodModal');
 const modalImage = apodModal.querySelector('.modal-image');
 const modalTitle = apodModal.querySelector('#modalTitle');
@@ -12,6 +13,16 @@ const modalCloseButton = apodModal.querySelector('.modal-close');
 
 const apodEndpoint = 'https://science.nasa.gov/wp-json/wp/v2/apod-basic';
 const apodsPerPage = 25;
+const spaceFacts = [
+	'A day on Venus lasts 243 Earth days—longer than its 225-day year.',
+	'The Moon moves about 3.8 centimeters farther from Earth each year.',
+	'Saturn is less dense than water, so it could float in a giant enough ocean.',
+	'The Sun contains about 99.8% of all the mass in our solar system.',
+	'Olympus Mons on Mars is about 22 kilometers tall, nearly two and a half times Mount Everest.'
+];
+
+// Pick a different space fact at random whenever the page loads.
+spaceFact.textContent = spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
 
 // Call the setupDateInputs function from dateRange.js
 // This sets up the date pickers to:
